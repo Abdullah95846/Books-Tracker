@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="main-container">
+
+      <!-- Top Header Row -->
+      <div class="top-row" id="topRow">
+        <div class="streak-badge animate-pulse-subtle" id="globalStreakBadge">
+          <svg class="flame-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 2c0 0-4.5 5-4.5 10a4.5 4.5 0 0 0 9 0c0-3-1.5-6-1.5-6s-1 2-2.5 2c0 0 .5-4-0.5-6z"/><path d="M12 14c-1.1 0-2-.9-2-2 0-1.5 2-4 2-4s2 2.5 2 4c0 1.1-.9 2-2 2z"/></svg>
+          <div>
+            <div class="streak-label">Streak</div>
+            <div class="streak-count" id="globalStreakCount">0 Days</div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="sync-btn" id="syncBtn" title="Cloud Sync">
+            <span id="syncIcon">☁️</span>
+            <span id="syncLabel">Sync</span>
+          </button>
+          <button class="theme-btn" id="themeToggle" title="Toggle dark mode">
+            <svg id="moonIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg id="sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+          <button class="add-btn" id="openAddBtn">
+            <span>+</span> Add New Book
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 14v-4m0 0V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4m-8 0h8m0 0v4m0-4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2z"/></svg>
+        </div>
+        <h3 class="display-font">Your library is empty</h3>
+        <p>Start tracking your reading journey today. Add your first book and set a daily goal to build your streak.</p>
+        <button class="add-btn" id="emptyAddBtn"><span>+</span> Add New Book</button>
+      </div>
+
+      <!-- Currently Reading -->
+      <section id="activeSection" style="display:none">
+        <h3 class="section-title display-font">
+          Currently Reading
+          <span class="count-pill primary" id="activeCount">0</span>
+        </h3>
+        <div class="books-grid" id="activeGrid"></div>
+      </section>
+
+      <!-- Completed -->
+      <section id="completedSection" style="display:none" class="completed-section">
+        <h3 class="section-title display-font muted">
+          Completed
+          <span class="count-pill secondary" id="completedCount">0</span>
+        </h3>
+        <div class="books-grid completed-grid" id="completedGrid"></div>
+      </section>
+
+      <!-- Motivational Tip -->
+      <div class="tip-card glass-card" id="tipCard" style="display:none">
+        <div class="tip-icon">💡</div>
+        <div>
+          <h4 class="tip-title">Daily Inspiration</h4>
+          <p class="tip-text" id="tipText"></p>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <section id="statsSection" style="display:none">
+        <h3 class="section-title display-font">Your Reading Stats</h3>
+        <div class="stats-grid">
+          <div class="stat-card glass-card hover-elevate">
+            <div class="stat-top">
+              <svg class="stat-icon primary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span class="stat-label">Pages Read</span>
+            </div>
+            <div class="stat-value primary-text" id="sPagesRead">0</div>
+            <p class="stat-sub" id="sPagesReadSub">across 0 books</p>
+          </div>
+          <div class="stat-card glass-card hover-elevate">
+            <div class="stat-top">
+              <svg class="stat-icon amber-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span class="stat-label">Completed</span>
+            </div>
+            <div class="stat-value amber-text" id="sCompleted">0</div>
+            <p class="stat-sub">books finished</p>
+          </div>
+          <div class="stat-card glass-card hover-elevate">
+            <div class="stat-top">
+              <svg class="stat-icon amber-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span class="stat-label">Progress</span>
+            </div>
+            <div class="stat-value amber-text" id="sProgress">0%</div>
+            <p class="stat-sub">total library</p>
+          </div>
+          <div class="stat-card glass-card hover-elevate">
+            <div class="stat-top">
+              <svg class="stat-icon orange-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.5 2c0 0-4.5 5-4.5 10a4.5 4.5 0 0 0 9 0c0-3-1.5-6-1.5-6s-1 2-2.5 2c0 0 .5-4-0.5-6z"/></svg>
+              <span class="stat-label">Avg Daily</span>
+            </div>
+            <div class="stat-value orange-text" id="sAvg">0</div>
+            <p class="stat-sub">pages per day</p>
+          </div>
+          <div class="stat-card glass-card hover-elevate">
+            <div class="stat-top">
+              <svg class="stat-icon blue-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+              <span class="stat-label">Books Left</span>
+            </div>
+            <div class="stat-value blue-text" id="sBooksLeft">0</div>
+            <p class="stat-sub">currently reading</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Add Book Modal -->
+  <div class="overlay" id="addModal">
+    <div class="modal glass-card">
+      <div class="modal-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+      </div>
+      <div class="modal-head">
+        <h2 class="display-font">Start a New Journey</h2>
+        <p class="modal-desc">Add a book to your tracker and set your daily reading goals.</p>
+        <button class="close-btn" data-close="addModal">✕</button>
+      </div>
+      <form id="addForm" class="modal-form">
+        <div class="field">
+          <label>Book Title</label>
+          <input type="text" id="aTitle" placeholder="e.g., The Midnight Library" required>
+        </div>
+        <div class="field">
+          <label>Author Name</label>
+          <input type="text" id="aAuthor" placeholder="e.g., Matt Haig">
+        </div>
+        <div class="field">
+          <label>Book Cover Image URL (Optional)</label>
+          <input type="url" id="aImage" placeholder="https://example.com/cover.jpg">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Total Pages</label>
+            <input type="number" id="aTotal" placeholder="350" min="1" required>
+          </div>
+          <div class="field">
+            <label>Current Page</label>
+            <input type="number" id="aCurrent" placeholder="0" min="0" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>Daily Target</label>
+          <input type="number" id="aTarget" placeholder="20" min="1" required>
+        </div>
+        <button type="submit" class="submit-btn" id="addSubmitBtn">Add Book</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Book Modal -->
+  <div class="overlay" id="editModal">
+    <div class="modal glass-card">
+      <div class="modal-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      </div>
+      <div class="modal-head">
+        <h2 class="display-font">Edit Book</h2>
+        <p class="modal-desc">Update your book details and reading progress.</p>
+        <button class="close-btn" data-close="editModal">✕</button>
+      </div>
+      <form id="editForm" class="modal-form">
+        <input type="hidden" id="eId">
+        <div class="field">
+          <label>Book Title</label>
+          <input type="text" id="eTitle" required>
+        </div>
+        <div class="field">
+          <label>Author Name</label>
+          <input type="text" id="eAuthor">
+        </div>
+        <div class="field">
+          <label>Book Cover Image URL (Optional)</label>
+          <input type="url" id="eImage">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Total Pages</label>
+            <input type="number" id="eTotal" min="1" required>
+          </div>
+          <div class="field">
+            <label>Current Page</label>
+            <input type="number" id="ePage" min="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>Daily Target</label>
+          <input type="number" id="eTarget" min="1" required>
+        </div>
+        <button type="submit" class="submit-btn">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="overlay" id="deleteModal">
+    <div class="modal glass-card" style="max-width:440px">
+      <div class="modal-head" style="margin-bottom:0">
+        <h2 class="display-font">Delete Book?</h2>
+        <button class="close-btn" data-close="deleteModal">✕</button>
+      </div>
+      <p class="delete-desc">Are you sure you want to remove "<span id="dBookTitle"></span>" from your tracker? This action cannot be undone and you will lose your streak.</p>
+      <div class="modal-footer">
+        <button class="btn-cancel" data-close="deleteModal">Cancel</button>
+        <button class="btn-delete" id="dConfirmBtn">Delete Book</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cloud Sync Modal -->
+  <div class="overlay" id="syncModal">
+    <div class="modal glass-card" style="max-width:520px">
+      <div class="modal-head">
+        <h2 class="display-font">☁️ Cloud Sync</h2>
+        <button class="close-btn" data-close="syncModal">✕</button>
+      </div>
+
+      <div id="syncConnected" style="display:none">
+        <div class="sync-connected-box">
+          <span>✅</span>
+          <div>
+            <strong>Sync is Active!</strong>
+            <p>Your data syncs automatically across all devices.</p>
+          </div>
+        </div>
+        <div class="field" style="margin-top:16px">
+          <label>Firebase Database URL</label>
+          <input type="text" id="syncUrlDisplay" readonly>
+        </div>
+        <div class="modal-footer" style="margin-top:16px">
+          <button class="btn-delete" id="disconnectBtn">Disconnect</button>
+          <button class="submit-btn" style="flex:0;padding:10px 20px" id="forcePullBtn">Pull from Cloud</button>
+        </div>
+      </div>
+
+      <div id="syncSetup">
+        <p class="modal-desc" style="margin-bottom:18px">Sync progress across all your devices for free using Firebase Realtime Database:</p>
+        <div class="setup-steps">
+          <div class="setup-step">
+            <div class="step-num">1</div>
+            <div>
+              <strong>Create a free Firebase project</strong>
+              <span>Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> → Add project</span>
+            </div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">2</div>
+            <div>
+              <strong>Create a Realtime Database</strong>
+              <span>Build → Realtime Database → Create → pick region → Start in <em>test mode</em></span>
+            </div>
+          </div>
+          <div class="setup-step">
+            <div class="step-num">3</div>
+            <div>
+              <strong>Paste your Database URL below</strong>
+              <span>It looks like: <code>https://my-app-default-rtdb.firebaseio.com</code></span>
+            </div>
+          </div>
+        </div>
+        <div class="field" style="margin-top:18px">
+          <label>Your Firebase Database URL</label>
+          <input type="url" id="firebaseUrlInput" placeholder="https://your-app-default-rtdb.firebaseio.com">
+        </div>
+        <p class="sync-warning">⚠️ Test mode allows access to anyone with your URL. Keep it private.</p>
+        <div class="modal-footer" style="margin-top:16px">
+          <button class="btn-cancel" data-close="syncModal">Cancel</button>
+          <button class="submit-btn" style="flex:0;padding:10px 20px" id="connectSyncBtn">Connect & Sync</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-title" id="toastTitle"></div>
+    <div class="toast-desc" id="toastDesc"></div>
+  </div>
+
+  <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999"></canvas>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
