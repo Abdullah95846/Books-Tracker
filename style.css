@@ -118,14 +118,14 @@ body {
   box-shadow: 0 8px 24px hsl(38 92% 50% / 0.1);
 }
 .flame-icon {
-  width: 32px;
-  height: 32px;
+  width: 65px;
+  height: 60px;
   color: hsl(38, 92%, 50%);
   fill: hsl(38, 92%, 50%);
   flex-shrink: 0;
 }
 .streak-label {
-  font-size: 10px;
+  font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -470,13 +470,13 @@ body {
 }
 .streak-display { display: flex; align-items: center; gap: 6px; }
 .streak-flame {
-  width: 20px;
-  height: 20px;
+  width: 35px;
+  height: 35px;
 }
 .streak-flame.active { fill: hsl(38, 92%, 50%); color: hsl(38, 92%, 50%); }
 .streak-flame.inactive { fill: none; color: var(--muted-fg); stroke: var(--muted-fg); }
 .streak-num {
-  font-size: 19px;
+  font-size: 22px;
   font-weight: 700;
 }
 .streak-num.active {
