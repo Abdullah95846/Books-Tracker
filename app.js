@@ -277,6 +277,9 @@ function render() {
   const active = books.filter(b => b.currentPage < b.totalPages);
   const completed = books.filter(b => b.currentPage >= b.totalPages);
 
+  // Sort active books by reading progress (highest progress first)
+  active.sort((a, b) => (b.currentPage / b.totalPages) - (a.currentPage / a.totalPages));
+  
   // Empty state
   const isEmpty = books.length === 0;
   document.getElementById("emptyState").classList.toggle("show", isEmpty);
